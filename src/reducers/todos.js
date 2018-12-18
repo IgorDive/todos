@@ -8,7 +8,10 @@ const byId = (state = {}, action) => {
         case 'RECEIVE_TODOS': 
             let tempArrOfTodos = {};
             
-            action.response.forEach( todo => tempArrOfTodos[todo.id] = todo );
+            action.response.forEach( todo => {
+                if (todo.id in state) return;
+                tempArrOfTodos[todo.id] = todo
+            } );
             return {...state, ...tempArrOfTodos};
         default: return state;
     }
@@ -17,7 +20,18 @@ const byId = (state = {}, action) => {
 const allIds = (state = [], action) => {
     switch (action.type) { 
         case 'ADD_TODO': return [...state, action.id];
-        case 'RECEIVE_TODOS': return [...state, ...action.response.map( todo => todo.id )];
+        case 'RECEIVE_TODOS': 
+            let tempObjectOfValues = {};
+            let tempArrOfId = [];
+
+            for ( let i = 0; i < state.length; i++) {
+                tempObjectOfValues[state[i]] = true;
+            }
+            action.response.forEach(todo => {
+                if(todo.id in tempObjectOfValues) return;
+                tempArrOfId.push(todo.id);
+            });
+            return [...state, ...tempArrOfId];
         default: return state;
     }
 };
