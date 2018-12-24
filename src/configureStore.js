@@ -6,24 +6,26 @@ const configureStore = () => {
         todoApp
     );
 
-    const addPromiseSupportToDispatch = dispatch => {
+    const addPromiseSupportToDispatch = store => {
+        const next = store.dispatch;
+
         return (action) => {
-            if ( typeof action.then !== 'function') {
-                return dispatch(action);
-            } else {
-                return action.then(a => dispatch(a))
-            };
+            if ( typeof action.then === 'function') return action.then(a => next(a));
+                
+            return next(action);
         }
     }
 
-    const addLoggingToDispatch = dispatch => {
-        if (!console.group) return dispatch;
+    const addLoggingToDispatch = store => {
+        const next = store.dispatch;
+
+        if (!console.group) return next;
         
         return (action) => {
             console.group(action.type);
             console.log('%c prev state', 'color: gray', store.getState());
             console.log('%c action', 'color: blue', action); 
-            const returnValue = dispatch(action);
+            const returnValue = next(action);
             console.log('%c next state', 'color: green', store.getState());
             console.groupEnd(action.type);
             return returnValue;    
@@ -31,10 +33,10 @@ const configureStore = () => {
     };
     
     if (process.env.NODE_ENV !== 'production') {
-        store.dispatch = addLoggingToDispatch(store.dispatch);
+        store.dispatch = addLoggingToDispatch(store);
     }
 
-    store.dispatch = addPromiseSupportToDispatch(store.dispatch);
+    store.dispatch = addPromiseSupportToDispatch(store);
 
     return store;
 }
