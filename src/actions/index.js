@@ -21,3 +21,8 @@ const receiveTodos = (filter, response) => ({
 export const fetchTodos = (filter) =>
     api.fetchTodos(filter)
         .then(todos => receiveTodos(filter, todos));
+
+export const requestTodos = (filter) => ({
+    type: 'REQUEST_TODOS',
+    filter,
+});
