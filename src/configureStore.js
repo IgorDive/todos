@@ -3,7 +3,9 @@ import { createLogger } from 'redux-logger';
 import todoApp from './reducers/index';
 
 const thunks = (store) => (next) => (action) => 
-        typeof action === 'function'? action(store.dispatch): next(action);
+        typeof action === 'function'? 
+            action(store.dispatch, store.getState): 
+            next(action);
 //wrapper for store.dispatch
 
 const configureStore = () => {
