@@ -11,6 +11,12 @@ const createList = (filter) => {
                 return filter !== 'completed'?
                     [...state, action.response.result]:
                     state;
+            case 'TOGGLE_TODO_SUCCESS':
+                if (filter === 'all') return state;
+                let st = [...state];
+
+                st.splice(st.findIndex(id => id === action.id), 1);
+                return st;
             default: return state;
         }
     }
