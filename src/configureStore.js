@@ -22,3 +22,7 @@ const configureStore = () => {
 };
 
 export default configureStore;
+
+// function applyMiddleWare(store, middlewares) {
+//     middlewares.slice().reverse().forEach(m => store.dispatch = m(store)(store.dispatch));
+// }
